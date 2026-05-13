@@ -42,7 +42,8 @@ class PaymentWindow:
         tk.Label(form_frame, text="Cardholder Name", bg=BG, fg=TEXT2, font=(
             "Segoe UI", 10)).grid(row=0, column=0, sticky="w", pady=(10, 0))
         self.name_ent = tk.Entry(form_frame, width=35, font=("Segoe UI", 12), bg=BG, fg=FG,
-                                 insertbackground=FG, relief="flat", highlightbackground="#E2E8F0", highlightthickness=1)
+                                 insertbackground=FG, relief="flat",
+                                 highlightbackground="#E2E8F0", highlightthickness=1)
         self.name_ent.grid(row=1, column=0, sticky="we", pady=(5, 0), ipady=5)
         self.name_err = tk.Label(form_frame, text="", bg=BG, fg=ERROR, font=("Segoe UI", 9))
         self.name_err.grid(row=2, column=0, sticky="w")
@@ -55,7 +56,8 @@ class PaymentWindow:
         self.card_var.trace_add('write', self._format_card_number)
 
         self.card_ent = tk.Entry(form_frame, textvariable=self.card_var, width=35, font=(
-            "Segoe UI", 12), bg=BG, fg=FG, insertbackground=FG, relief="flat", highlightbackground="#E2E8F0", highlightthickness=1)
+            "Segoe UI", 12), bg=BG, fg=FG, insertbackground=FG, relief="flat",
+            highlightbackground="#E2E8F0", highlightthickness=1)
         self.card_ent.grid(row=4, column=0, sticky="we", pady=(5, 0), ipady=5)
         self.card_err = tk.Label(form_frame, text="", bg=BG, fg=ERROR, font=("Segoe UI", 9))
         self.card_err.grid(row=5, column=0, sticky="w")
@@ -148,7 +150,6 @@ class PaymentWindow:
             try:
                 m, y = map(int, exp.split('/'))
                 y += 2000
-                exp_date = datetime.date(y, m, 1)
                 today = datetime.date.today()
 
                 # Check if expired (must be valid future or current month)

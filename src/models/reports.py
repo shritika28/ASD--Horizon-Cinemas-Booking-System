@@ -39,7 +39,7 @@ class ReportManager:
     @staticmethod
     def monthly_revenue(cinema_id: int, year: int, month: int, db_connection) -> dict:
         """
-        Returns: total_bookings (int), total_revenue (float), revenue_by_show_type (dict), average_occupancy_percent (float).
+        Returns monthly booking, revenue, show-type, and occupancy metrics.
         """
         # Format year and month for LIKE comparison
         month_str = f"{year}-{month:02d}"

@@ -202,7 +202,10 @@ class SessionManager:
             return
 
         messagebox.showinfo(
-            "Session Expired", "Your session has expired due to inactivity. Please log in again.", parent=self._active_root)
+            "Session Expired",
+            "Your session has expired due to inactivity. Please log in again.",
+            parent=self._active_root
+        )
         _logout_and_return(self._active_root)
 
 

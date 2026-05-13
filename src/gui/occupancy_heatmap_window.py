@@ -302,7 +302,7 @@ class OccupancyHeatmapPanel:
         self._ax.set_xticks(np.arange(len(self._x_labels)))
         self._ax.set_yticks(np.arange(len(self._y_labels)))
         self._ax.set_xticklabels(self._x_labels, color=FG2)
-        self._ax.set_yticklabels([l.capitalize() for l in self._y_labels], color=FG2)
+        self._ax.set_yticklabels([label.capitalize() for label in self._y_labels], color=FG2)
 
         for sp in self._ax.spines.values():
             sp.set_color(BORDER)

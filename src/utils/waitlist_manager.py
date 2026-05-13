@@ -81,7 +81,9 @@ def process_waitlist(showing_id: int, freed_seats: int):
             conn.commit()
 
             print(
-                f"WAITLIST OFFER: {w['customer_name']} offered {w['num_tickets']} seat(s) for {film_title} at {show_time}")
+                f"WAITLIST OFFER: {w['customer_name']} offered {w['num_tickets']} "
+                f"seat(s) for {film_title} at {show_time}"
+            )
 
             freed_seats -= w["num_tickets"]
             if freed_seats <= 0:

@@ -5,22 +5,19 @@ Booking Form GUI for the Horizon Cinemas Booking System (HCBS).
 
 Author      : [Your Name] — Student ID: [Your Student ID]
 Module      : Advanced Software Development
-Description : Allows staff to book tickets. Features dynamic showing 
-              dropdowns, real-time pricing via PricingEngine, and a 
+Description : Allows staff to book tickets. Features dynamic showing
+              dropdowns, real-time pricing via PricingEngine, and a
               receipt generator.
 """
 
 import tkinter as tk
 from tkinter import ttk, messagebox
 import datetime
-import random
-import uuid
 
 # ── Project imports ──────────────────────────────────────────────────────────
 from src.database.db_connection import get_connection
 from src.models.showing import Showing
 from src.models.film import Film
-from src.models.screen import Screen
 from src.models.cinema import Cinema
 from src.models.user import User
 from src.utils.pricing_engine import PricingEngine
@@ -28,7 +25,6 @@ from src.gui.login_window import SessionManager
 from src.utils.input_validator import InputValidator
 
 from src.utils.pdf_service import PDFService
-from src.utils.rbac import require_role
 
 
 def allow_staff_and_admin(cls):
@@ -151,7 +147,7 @@ class BookingWindow:
             g = int(bg[3:5], 16)
             b = int(bg[5:7], 16)
             hover_bg = f"#{max(0, r-20):02x}{max(0, g-20):02x}{max(0, b-20):02x}"
-        except:
+        except (TypeError, ValueError):
             hover_bg = bg
         btn.bind("<Enter>", lambda e: btn.config(bg=hover_bg))
         btn.bind("<Leave>", lambda e: btn.config(bg=bg))
@@ -213,7 +209,9 @@ class BookingWindow:
         form_frame = tk.Frame(self.root, bg=BG, padx=30, pady=30)
         form_frame.grid(row=0, column=0, sticky="nsew")
 
-        tk.Label(form_frame, text="🎟️  New Ticket Booking", font=FONT_H1, bg=BG, fg=TEXT).pack(anchor="w", pady=(0, 20))
+        tk.Label(
+            form_frame, text="🎟️  New Ticket Booking", font=FONT_H1, bg=BG, fg=TEXT
+        ).pack(anchor="w", pady=(0, 20))
 
         # 1. Selection Card
         sel_card = tk.Frame(form_frame, bg=BG_CARD, padx=20, pady=20, highlightbackground=BORDER, highlightthickness=1)
@@ -273,12 +271,18 @@ class BookingWindow:
                  fg=TEXT2).grid(row=0, column=0, sticky="w", pady=5)
 
         self.ticket_type_var = tk.StringVar(value="lower_hall")
-        ttk.Radiobutton(tkt_card, text="Lower Hall", variable=self.ticket_type_var, value="lower_hall",
-                        style="HCBS.TRadiobutton", command=self._schedule_realtime_update).grid(row=0, column=1, sticky="w")
-        ttk.Radiobutton(tkt_card, text="Upper Gallery", variable=self.ticket_type_var, value="upper_gallery",
-                        style="HCBS.TRadiobutton", command=self._schedule_realtime_update).grid(row=0, column=2, sticky="w")
-        ttk.Radiobutton(tkt_card, text="VIP", variable=self.ticket_type_var, value="vip",
-                        style="HCBS.TRadiobutton", command=self._schedule_realtime_update).grid(row=0, column=3, sticky="w")
+        ttk.Radiobutton(
+            tkt_card, text="Lower Hall", variable=self.ticket_type_var, value="lower_hall",
+            style="HCBS.TRadiobutton", command=self._schedule_realtime_update
+        ).grid(row=0, column=1, sticky="w")
+        ttk.Radiobutton(
+            tkt_card, text="Upper Gallery", variable=self.ticket_type_var, value="upper_gallery",
+            style="HCBS.TRadiobutton", command=self._schedule_realtime_update
+        ).grid(row=0, column=2, sticky="w")
+        ttk.Radiobutton(
+            tkt_card, text="VIP", variable=self.ticket_type_var, value="vip",
+            style="HCBS.TRadiobutton", command=self._schedule_realtime_update
+        ).grid(row=0, column=3, sticky="w")
 
         tk.Label(tkt_card, text="Quantity:", font=FONT_LABEL, bg=BG_CARD,
                  fg=TEXT2).grid(row=1, column=0, sticky="w", pady=(15, 5))
@@ -325,19 +329,22 @@ class BookingWindow:
         tk.Label(self.cust_card, text="Customer Name:", font=FONT_BODY,
                  bg=BG_CARD, fg=TEXT).grid(row=0, column=0, sticky="w", pady=5)
         self.cust_name_ent = tk.Entry(self.cust_card, font=FONT_BODY, bg=BG, fg=TEXT,
-                                      insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                      insertbackground=TEXT, relief="flat",
+                                      highlightbackground=BORDER, highlightthickness=1)
         self.cust_name_ent.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
 
         tk.Label(self.cust_card, text="Phone:", font=FONT_BODY, bg=BG_CARD,
                  fg=TEXT).grid(row=1, column=0, sticky="w", pady=5)
         self.cust_phone_ent = tk.Entry(self.cust_card, font=FONT_BODY, bg=BG, fg=TEXT,
-                                       insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                       insertbackground=TEXT, relief="flat",
+                                       highlightbackground=BORDER, highlightthickness=1)
         self.cust_phone_ent.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
 
         tk.Label(self.cust_card, text="Email:", font=FONT_BODY, bg=BG_CARD,
                  fg=TEXT).grid(row=2, column=0, sticky="w", pady=5)
         self.cust_email_ent = tk.Entry(self.cust_card, font=FONT_BODY, bg=BG, fg=TEXT,
-                                       insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                       insertbackground=TEXT, relief="flat",
+                                       highlightbackground=BORDER, highlightthickness=1)
         self.cust_email_ent.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
         self.cust_email_ent.bind("<FocusOut>", self._check_duplicate_booking)
 
@@ -945,7 +952,10 @@ class BookingWindow:
         if hasattr(self, 'current_booking_data'):
             try:
                 path = PDFService.generate_ticket(self.current_booking_data)
-                if messagebox.askyesno("Success", f"Ticket PDF generated successfully!\nPath: {path}\n\nWould you like to open it now?"):
+                if messagebox.askyesno(
+                    "Success",
+                    f"Ticket PDF generated successfully!\nPath: {path}\n\nWould you like to open it now?"
+                ):
                     import os
                     os.startfile(path)
             except Exception as e:
@@ -963,58 +973,6 @@ class BookingWindow:
         self.receipt_text.delete(1.0, tk.END)
         self.receipt_text.config(state="disabled")
         self.rec_act_frame.pack_forget()
-
-    def _show_loyalty_popup(self) -> None:
-        """Show a loyalty account lookup popup keyed to the entered email."""
-        email = self.cust_email_ent.get().strip()
-        if not email:
-            from tkinter import messagebox
-            messagebox.showwarning("No Email", "Enter a customer email first.", parent=self._tl)
-            return
-
-        from src.utils.loyalty_manager import get_account, TIER_COLOURS
-        acct = get_account(email)
-
-        pop = tk.Toplevel(self._tl)
-        pop.title("Loyalty Account")
-        pop.geometry("420x380")
-        pop.configure(bg=BG)
-        pop.grab_set()
-
-        if not acct:
-            tk.Label(pop, text="No loyalty account found for this email.",
-                     bg=BG, fg=TEXT2, font=FONT_BODY).pack(pady=40)
-            return
-
-        tier = acct["tier"]
-        badge_colour = TIER_COLOURS.get(tier, TEXT2)
-
-        tk.Label(pop, text="🏅 Loyalty Account", font=FONT_H2, bg=BG, fg=TEXT).pack(pady=(20, 5))
-        tk.Label(pop, text=acct["customer_name"], font=FONT_BODY, bg=BG, fg=TEXT2).pack()
-        tk.Label(pop, text=f"{tier.upper()} MEMBER", font=("Segoe UI", 14, "bold"), bg=BG, fg=badge_colour).pack(pady=6)
-        tk.Label(pop, text=f"🔖 {acct['total_points']} pts", font=("Segoe UI", 20, "bold"), bg=BG, fg=TEXT).pack(pady=4)
-
-        sep = tk.Frame(pop, bg=BORDER, height=1)
-        sep.pack(fill="x", padx=20, pady=8)
-
-        tk.Label(pop, text="Recent Transactions:", font=FONT_LABEL, bg=BG, fg=TEXT2).pack(anchor="w", padx=20)
-
-        from tkinter import ttk
-        cols = ("Date", "Booking", "Earned", "Deducted")
-        tv = ttk.Treeview(pop, columns=cols, show="headings", height=5)
-        for c in cols:
-            tv.heading(c, text=c)
-            tv.column(c, width=90, anchor="center")
-
-        for tx in acct.get("transactions", []):
-            tv.insert("", "end", values=(
-                tx["created_at"][:10],
-                tx.get("booking_id", "—"),
-                f"+{tx['points_earned']}" if tx["points_earned"] > 0 else str(tx["points_earned"]),
-                tx["points_redeemed"]
-            ))
-        tv.pack(fill="x", padx=20, pady=8)
-        tk.Button(pop, text="Close", bg=BG2, fg=TEXT, relief="flat", padx=20, pady=6, command=pop.destroy).pack(pady=6)
 
     def _show_loyalty_popup(self) -> None:
         """Show a loyalty account lookup popup keyed to the entered email."""

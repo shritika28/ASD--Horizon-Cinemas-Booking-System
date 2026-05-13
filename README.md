@@ -1,4 +1,4 @@
-# Horizon Cinemas Booking System (HCBS)
+# Horizon Cinemas Booking System (HCBS
 
 HCBS is a comprehensive Python-based cinema booking system designed to streamline movie scheduling, seat reservations, and staff management. The system features a graphical user interface built with Tkinter and a persistent SQLite database.
 

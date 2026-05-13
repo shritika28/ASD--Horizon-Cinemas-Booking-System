@@ -352,9 +352,15 @@ def seed_data(conn_or_cursor):
 
             cursor.execute("""
                 INSERT INTO bookings
-                (showing_id, booking_ref, customer_name, total_cost, booking_status, booked_by_agent, staff_id, booking_time)
+                (
+                    showing_id, booking_ref, customer_name, total_cost,
+                    booking_status, booked_by_agent, staff_id, booking_time
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (showing_id, booking_ref, customer_name, total_cost, 'Active', 1, staff_id, booking_time))
+            """, (
+                showing_id, booking_ref, customer_name, total_cost,
+                'Active', 1, staff_id, booking_time
+            ))
 
             booking_id = cursor.lastrowid
 
@@ -380,7 +386,10 @@ def seed_data(conn_or_cursor):
         for i in range(random.randint(1, 3)):
             now = datetime.datetime.now().isoformat()
             cursor.execute("""
-                INSERT INTO waitlist (showing_id, customer_name, customer_email, customer_phone, num_tickets, joined_at, status)
+                INSERT INTO waitlist (
+                    showing_id, customer_name, customer_email, customer_phone,
+                    num_tickets, joined_at, status
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (showing_id, f"WaitlistCustomer_{random.randint(1000, 9999)}",
                   f"email_{random.randint(1, 9999)}@example.com", "12345678",

@@ -139,7 +139,7 @@ class BookingManager:
 
         Args:
             showing_id: FK to showing.
-            staff_user_id: ID of the staff creating the booking (currently unused in SQLite schema but kept for interface).
+            staff_user_id: ID of the staff creating the booking.
             ticket_type: 'lower_hall', 'upper_gallery', or 'vip'.
             quantity: Number of tickets.
             customer_name: Customer's name.
@@ -187,7 +187,10 @@ class BookingManager:
             now_iso = datetime.datetime.now().isoformat()
             cursor = db_connection.execute(
                 """
-                INSERT INTO bookings (showing_id, booking_ref, customer_name, customer_email, total_cost, booking_status, booked_by_agent, staff_id, booking_time)
+                INSERT INTO bookings (
+                    showing_id, booking_ref, customer_name, customer_email,
+                    total_cost, booking_status, booked_by_agent, staff_id, booking_time
+                )
                 VALUES (?, ?, ?, ?, ?, 'Active', ?, ?, ?)
                 """,
                 (showing_id, booking_ref, customer_name, customer_email,

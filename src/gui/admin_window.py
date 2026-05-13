@@ -90,11 +90,6 @@ class AdminWindow:
         self._create_btn(bar, "Cancel Booking", "#B91C1C", self._open_cancellation).pack(side="right", padx=5)
         self._create_btn(bar, "📊 Live Dashboard", "#0D9488", self._open_dashboard).pack(side="right", padx=5)
 
-    def _logout(self):
-        if messagebox.askyesno("Confirm Logout", "Are you sure you want to log out?"):
-            from src.gui.login_window import _logout_and_return
-            _logout_and_return(self.root)
-
     def _build_notebook(self):
         print("[DEBUG] AdminWindow._build_notebook called")
         style = ttk.Style()
@@ -201,7 +196,9 @@ class AdminWindow:
             for row in rows:
                 active_str = "Yes" if row["is_active"] else "No"
                 self.films_tree.insert("", "end", values=(
-                    row["film_id"], row["title"], row["genre"], row["age_rating"], f"{row['duration_mins']}m", active_str))
+                    row["film_id"], row["title"], row["genre"], row["age_rating"],
+                    f"{row['duration_mins']}m", active_str
+                ))
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -363,7 +360,9 @@ class AdminWindow:
             return
 
         if messagebox.askyesno(
-                "Confirm Remove", f"Are you sure you want to deactivate '{title}'?\nThis will hide it from future listings."):
+                "Confirm Remove",
+                f"Are you sure you want to deactivate '{title}'?\n"
+                "This will hide it from future listings."):
             try:
                 Film.deactivate(film_id)
                 self._refresh_films()
@@ -405,13 +404,18 @@ class AdminWindow:
             self.shows_tree.delete(row)
         try:
             conn = get_connection()
-            q = '''SELECT s.showing_id, f.title, c.cinema_name, s.screen_id, s.show_date, s.show_time, s.show_type, s.seats_remaining, s.is_cancelled
-                   FROM showings s
-                   JOIN films f ON s.film_id = f.film_id
-                   JOIN screens sc ON s.screen_id = sc.screen_id
-                   JOIN cinemas c ON sc.cinema_id = c.cinema_id
-                   ORDER BY s.show_date DESC, s.show_time DESC
-                   LIMIT 200'''
+            q = '''
+                SELECT
+                    s.showing_id, f.title, c.cinema_name, s.screen_id,
+                    s.show_date, s.show_time, s.show_type,
+                    s.seats_remaining, s.is_cancelled
+                FROM showings s
+                JOIN films f ON s.film_id = f.film_id
+                JOIN screens sc ON s.screen_id = sc.screen_id
+                JOIN cinemas c ON sc.cinema_id = c.cinema_id
+                ORDER BY s.show_date DESC, s.show_time DESC
+                LIMIT 200
+            '''
             rows = conn.execute(q).fetchall()
             print(f"[DEBUG] AdminWindow._refresh_showings fetched {len(rows)} rows")
             for row in rows:
@@ -572,7 +576,9 @@ class AdminWindow:
             return
 
         if messagebox.askyesno(
-                "Confirm Cancel", f"Are you sure you want to cancel showing ID {sid}?\nAll active bookings will be cancelled with a 100% refund."):
+                "Confirm Cancel",
+                f"Are you sure you want to cancel showing ID {sid}?\n"
+                "All active bookings will be cancelled with a 100% refund."):
             try:
                 from src.models.cancellation import CancellationManager
                 conn = get_connection()
@@ -980,8 +986,11 @@ Booked By Agent: {'Yes' if booking['booked_by_agent'] else 'No'}
                 ORDER BY sh.show_time
             """, (cinema_id, date_str)).fetchall()
 
-            showing_opts = [f"{s['showing_id']} - {s['title'][:30]} {s['show_time']} ({s['show_type']}) - {s['seats_remaining']} seats"
-                            for s in showings]
+            showing_opts = [
+                f"{s['showing_id']} - {s['title'][:30]} {s['show_time']} "
+                f"({s['show_type']}) - {s['seats_remaining']} seats"
+                for s in showings
+            ]
             self.cb_showing_cb['values'] = showing_opts
             if showing_opts:
                 self.cb_showing_cb.current(0)
@@ -998,7 +1007,6 @@ Booked By Agent: {'Yes' if booking['booked_by_agent'] else 'No'}
 
         try:
             showing_id = int(showing_str.split(" - ")[0])
-            ticket_count = int(self.cb_ticket_count.get() or 1)
 
             conn = get_connection()
 
@@ -1126,15 +1134,22 @@ Booked By Agent: {'Yes' if booking['booked_by_agent'] else 'No'}
                 return
 
             # Create booking reference
-            booking_ref = f"HCBS-{datetime.date.today().isoformat().replace('-',
-                                                                            '')}-{datetime.datetime.now().strftime('%H%M%S')}"
+            date_part = datetime.date.today().isoformat().replace("-", "")
+            time_part = datetime.datetime.now().strftime("%H%M%S")
+            booking_ref = f"HCBS-{date_part}-{time_part}"
 
             # Insert booking
             conn.execute("""
                 INSERT INTO bookings
-                (showing_id, booking_ref, customer_name, customer_email, total_cost, booking_status, booked_by_agent, staff_id)
+                (
+                    showing_id, booking_ref, customer_name, customer_email,
+                    total_cost, booking_status, booked_by_agent, staff_id
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (showing_id, booking_ref, customer_name, customer_email, total_cost, "Active", 1, self.user.user_id))
+            """, (
+                showing_id, booking_ref, customer_name, customer_email,
+                total_cost, "Active", 1, self.user.user_id
+            ))
 
             booking_id = conn.execute("SELECT last_insert_rowid() as id").fetchone()['id']
 
@@ -1463,7 +1478,9 @@ Booked By Agent: {'Yes' if booking['booked_by_agent'] else 'No'}
                 raw_data = ReportManager.bookings_per_listing(cinema_id, conn)
                 for r in raw_data:
                     self.rep_tree.insert("", "end", values=(
-                        r["film_title"], r["show_date"], r["show_time"], r["total_bookings"], f"£{r['total_revenue']:.2f}"))
+                        r["film_title"], r["show_date"], r["show_time"],
+                        r["total_bookings"], f"£{r['total_revenue']:.2f}"
+                    ))
                 data = raw_data
 
             elif rtype == "Monthly Revenue":
@@ -1871,7 +1888,8 @@ Booked By Agent: {'Yes' if booking['booked_by_agent'] else 'No'}
         tk.Label(form_fr, text="Password:", font=("Segoe UI", 11), bg=BG2,
                  fg=TEXT2).grid(row=2, column=0, sticky="w", pady=10)
         self.staff_pass_ent = tk.Entry(form_fr, font=("Segoe UI", 11), bg=BG, fg=FG, insertbackground=FG,
-                                       width=25, show="*", relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                       width=25, show="*", relief="flat",
+                                       highlightbackground=BORDER, highlightthickness=1)
         self.staff_pass_ent.grid(row=2, column=1, sticky="w", pady=10)
 
         tk.Label(form_fr, text="Full Name:", font=("Segoe UI", 11), bg=BG2,

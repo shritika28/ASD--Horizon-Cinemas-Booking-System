@@ -450,7 +450,7 @@ class FilmListingWindow:
     def _load_cinemas(self) -> None:
         """Populate the cinema selection and load initial film data."""
         try:
-            print(f"[DEBUG] FilmListingWindow._load_cinemas called")
+            print("[DEBUG] FilmListingWindow._load_cinemas called")
             self._cinemas = Cinema.get_all()
             print(f"[DEBUG] Loaded {len(self._cinemas)} cinemas")
             names = [c.cinema_name for c in self._cinemas]
@@ -492,7 +492,7 @@ class FilmListingWindow:
         self._all_films.clear()
 
         if self._selected_cinema_id is None:
-            print(f"[DEBUG] _selected_cinema_id is None, returning")
+            print("[DEBUG] _selected_cinema_id is None, returning")
             return
 
         date_str = self._current_date.isoformat()
@@ -731,11 +731,15 @@ class FilmListingWindow:
                 meta_lbl.pack(anchor="w")
 
                 info_lbl = tk.Label(
-                    r_frame, text=f"Next: {r['next_show_date']} {r['next_show_time']}", font=FONT_SMALL, bg=r_frame["bg"], fg=TEXT2)
+                    r_frame, text=f"Next: {r['next_show_date']} {r['next_show_time']}",
+                    font=FONT_SMALL, bg=r_frame["bg"], fg=TEXT2)
                 info_lbl.pack(anchor="w", pady=(2, 5))
 
-                btn = tk.Button(r_frame, text="Book Now", font=FONT_BTN, bg=SUCCESS, fg=TEXT, activebackground=SUCCESS_HVR, relief="flat", cursor="hand2", padx=10, pady=2,
-                                command=lambda sh_id=r["next_showing_id"]: self._open_booking_by_id(sh_id))
+                btn = tk.Button(
+                    r_frame, text="Book Now", font=FONT_BTN, bg=SUCCESS, fg=TEXT,
+                    activebackground=SUCCESS_HVR, relief="flat", cursor="hand2", padx=10, pady=2,
+                    command=lambda sh_id=r["next_showing_id"]: self._open_booking_by_id(sh_id)
+                )
                 btn.pack(anchor="w")
 
     # ── Event handlers ────────────────────────────────────────────────────────

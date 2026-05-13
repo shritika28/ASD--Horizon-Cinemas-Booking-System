@@ -353,11 +353,6 @@ class User:
         """
         self._logged_in = False
 
-    @property
-    def is_admin(self) -> bool:
-        """Returns True if the user is an admin or manager."""
-        return self.role in ("admin", "manager")
-
     # -----------------------------------------------------------------------
     # Dunder Methods
     # -----------------------------------------------------------------------

@@ -96,7 +96,8 @@ class DashboardWindow:
         tk.Label(chart_top, text="Top 5 Films by Revenue", font=FONT_H2, bg=BG_CARD, fg=TEXT).pack(side="left")
 
         self.btn_toggle_chart = tk.Button(chart_top, text="View: Today", font=FONT_BTN,
-                                          bg=BG2, fg=TEXT, relief="flat", cursor="hand2", command=self._toggle_chart_mode)
+                                          bg=BG2, fg=TEXT, relief="flat", cursor="hand2",
+                                          command=self._toggle_chart_mode)
         self.btn_toggle_chart.pack(side="right")
 
         self.figure = Figure(figsize=(5, 4), dpi=144, facecolor=BG_CARD)

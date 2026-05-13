@@ -32,18 +32,32 @@ class ChatbotWidget(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.hide_widget)
 
         self.patterns = [
-            (r".*booking.*how.*|.*how.*book.*", "To make a booking, select a date and cinema from the main screen, then click the 'Morning', 'Afternoon', or 'Evening' button for the desired film. Choose your seats and proceed to checkout."),
-            (r".*cancel.*booking.*|.*booking.*cancel.*", "To cancel a booking, use the 'Cancel Booking' button in the top navigation bar. You will need the Booking Reference ID and the customer's email. Note: a 50% cancellation fee applies, and you cannot cancel on the day of the showing."),
+            (
+                r".*booking.*how.*|.*how.*book.*",
+                "To make a booking, select a date and cinema from the main screen, then click the "
+                "'Morning', 'Afternoon', or 'Evening' button for the desired film. Choose your seats "
+                "and proceed to checkout."
+            ),
+            (
+                r".*cancel.*booking.*|.*booking.*cancel.*",
+                "To cancel a booking, use the 'Cancel Booking' button in the top navigation bar. "
+                "You will need the Booking Reference ID and the customer's email. Note: a 50% "
+                "cancellation fee applies, and you cannot cancel on the day of the showing."
+            ),
             (r".*vip.*price.*|.*price.*vip.*|.*explain.*price.*",
-             "VIP pricing is calculated as: Base Price (Lower Hall) + 20% uplift for Upper Gallery + an additional 20% uplift for VIP seats on top of that."),
+             "VIP pricing is calculated as: Base Price (Lower Hall) + 20% uplift for Upper Gallery "
+             "+ an additional 20% uplift for VIP seats on top of that."),
             (r".*advance.*book.*|.*book.*advance.*",
              "Advance bookings can be made up to 1 week (7 days) ahead of the current date."),
             (r".*cancel.*rule.*|.*rule.*cancel.*",
-             "Cancellation rules: A 50% fee applies to all cancellations. Cancellations are strictly not permitted on the day of the showing."),
+             "Cancellation rules: A 50% fee applies to all cancellations. Cancellations are strictly "
+             "not permitted on the day of the showing."),
             (r".*generate.*report.*|.*report.*generate.*",
-             "To generate reports, go to the 'Admin Dashboard' and select the 'Reports' or 'Monthly Revenue' tabs. (This is restricted to Admin/Manager roles)."),
+             "To generate reports, go to the 'Admin Dashboard' and select the 'Reports' or 'Monthly "
+             "Revenue' tabs. (This is restricted to Admin/Manager roles)."),
             (r".*add.*cinema.*|.*cinema.*add.*",
-             "To add a new cinema, go to the 'Manager Dashboard' and use the Cinema Management tools. (This is restricted to Manager roles only)."),
+             "To add a new cinema, go to the 'Manager Dashboard' and use the Cinema Management tools. "
+             "(This is restricted to Manager roles only)."),
             (r".*hi.*|.*hello.*|.*hey.*", "Hello! I am the HCBS Help Assistant. How can I help you today?"),
             (r".*bye.*|.*goodbye.*", "Goodbye! Have a great shift."),
         ]

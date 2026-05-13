@@ -150,8 +150,14 @@ class StaffLeaderboardPanel:
                 SELECT
                     u.full_name AS staff_name,
                     COUNT(b.booking_id) AS total_handled,
-                    IFNULL(SUM(CASE WHEN b.booking_status = 'Cancelled' THEN 1 ELSE 0 END), 0) AS cancellations_processed,
-                    IFNULL(SUM(CASE WHEN b.booking_status != 'Cancelled' THEN b.total_cost ELSE 0 END), 0) AS total_revenue
+                    IFNULL(
+                        SUM(CASE WHEN b.booking_status = 'Cancelled' THEN 1 ELSE 0 END),
+                        0
+                    ) AS cancellations_processed,
+                    IFNULL(
+                        SUM(CASE WHEN b.booking_status != 'Cancelled' THEN b.total_cost ELSE 0 END),
+                        0
+                    ) AS total_revenue
                 FROM users u
                 LEFT JOIN bookings b ON u.user_id = b.staff_id {join_filters}
                 WHERE u.role = 'staff'

@@ -450,7 +450,13 @@ class ManagerWindow:
 
             for i in range(1, screens + 1):
                 conn.execute(
-                    "INSERT INTO screens (cinema_id, screen_number, total_capacity, lower_hall_seats, upper_gallery_seats, vip_seats) VALUES (?, ?, ?, ?, ?, ?)",
+                    """
+                    INSERT INTO screens (
+                        cinema_id, screen_number, total_capacity,
+                        lower_hall_seats, upper_gallery_seats, vip_seats
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
                     (cinema_id, i, capacity, lower, upper, vip)
                 )
 
@@ -514,19 +520,22 @@ class ManagerWindow:
 
         tk.Label(price_frame, text="Morning (£):", font=FONT_BODY, bg=BG_CARD, fg=TEXT2).pack(side="left")
         self.p_morn_ent = tk.Entry(price_frame, font=FONT_BODY, bg=BG, fg=TEXT, width=8,
-                                   insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                   insertbackground=TEXT, relief="flat",
+                                   highlightbackground=BORDER, highlightthickness=1)
         self.p_morn_ent.pack(side="left", padx=(5, 15))
         self.p_morn_ent.insert(0, "5.00")
 
         tk.Label(price_frame, text="Afternoon (£):", font=FONT_BODY, bg=BG_CARD, fg=TEXT2).pack(side="left")
         self.p_aft_ent = tk.Entry(price_frame, font=FONT_BODY, bg=BG, fg=TEXT, width=8,
-                                  insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                  insertbackground=TEXT, relief="flat",
+                                  highlightbackground=BORDER, highlightthickness=1)
         self.p_aft_ent.pack(side="left", padx=(5, 15))
         self.p_aft_ent.insert(0, "7.00")
 
         tk.Label(price_frame, text="Evening (£):", font=FONT_BODY, bg=BG_CARD, fg=TEXT2).pack(side="left")
         self.p_eve_ent = tk.Entry(price_frame, font=FONT_BODY, bg=BG, fg=TEXT, width=8,
-                                  insertbackground=TEXT, relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                  insertbackground=TEXT, relief="flat",
+                                  highlightbackground=BORDER, highlightthickness=1)
         self.p_eve_ent.pack(side="left", padx=(5, 15))
         self.p_eve_ent.insert(0, "10.00")
 
@@ -620,11 +629,22 @@ class ManagerWindow:
             for stype, price in [("morning", pm), ("afternoon", pa), ("evening", pe)]:
                 cur = conn.execute("SELECT price_id FROM prices WHERE city_id = ? AND show_type = ?", (city_id, stype))
                 if cur.fetchone():
-                    conn.execute("UPDATE prices SET lower_hall_price = ?, effective_from = ? WHERE city_id = ? AND show_type = ?",
-                                 (price, today_iso, city_id, stype))
+                    conn.execute(
+                        """
+                        UPDATE prices
+                        SET lower_hall_price = ?, effective_from = ?
+                        WHERE city_id = ? AND show_type = ?
+                        """,
+                        (price, today_iso, city_id, stype)
+                    )
                 else:
-                    conn.execute("INSERT INTO prices (city_id, show_type, lower_hall_price, effective_from) VALUES (?, ?, ?, ?)",
-                                 (city_id, stype, price, today_iso))
+                    conn.execute(
+                        """
+                        INSERT INTO prices (city_id, show_type, lower_hall_price, effective_from)
+                        VALUES (?, ?, ?, ?)
+                        """,
+                        (city_id, stype, price, today_iso)
+                    )
 
             cur = conn.execute("SELECT total_capacity FROM screens WHERE screen_id = ?", (sid,))
             cap = cur.fetchone()["total_capacity"]
@@ -640,7 +660,13 @@ class ManagerWindow:
                     show_type = "evening"
 
                 conn.execute(
-                    "INSERT INTO showings (film_id, screen_id, show_date, show_time, show_type, seats_remaining) VALUES (?, ?, ?, ?, ?, ?)",
+                    """
+                    INSERT INTO showings (
+                        film_id, screen_id, show_date, show_time,
+                        show_type, seats_remaining
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
                     (fid, sid, date_str, t, show_type, cap)
                 )
 
@@ -840,7 +866,8 @@ class ManagerWindow:
         tk.Label(form_fr, text="Password:", font=FONT_BODY, bg=BG_CARD,
                  fg=TEXT2).grid(row=2, column=0, sticky="w", pady=10)
         self.admin_pass_ent = tk.Entry(form_fr, font=FONT_BODY, bg=BG, fg=TEXT, insertbackground=TEXT,
-                                       width=25, show="*", relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                       width=25, show="*", relief="flat",
+                                       highlightbackground=BORDER, highlightthickness=1)
         self.admin_pass_ent.grid(row=2, column=1, sticky="w", pady=10)
 
         tk.Label(form_fr, text="Full Name:", font=FONT_BODY, bg=BG_CARD,
@@ -963,7 +990,8 @@ class ManagerWindow:
         tk.Label(form_fr, text="Password:", font=FONT_BODY, bg=BG_CARD,
                  fg=TEXT2).grid(row=2, column=0, sticky="w", pady=10)
         self.staff_pass_ent = tk.Entry(form_fr, font=FONT_BODY, bg=BG, fg=TEXT, insertbackground=TEXT,
-                                       width=25, show="*", relief="flat", highlightbackground=BORDER, highlightthickness=1)
+                                       width=25, show="*", relief="flat",
+                                       highlightbackground=BORDER, highlightthickness=1)
         self.staff_pass_ent.grid(row=2, column=1, sticky="w", pady=10)
 
         tk.Label(form_fr, text="Full Name:", font=FONT_BODY, bg=BG_CARD,

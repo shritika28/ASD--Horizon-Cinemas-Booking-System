@@ -76,7 +76,8 @@ class CancellationWindow:
         tk.Button(btn_frame, text="Go Back", bg=BORDER, fg="white", font=("Segoe UI", 12, "bold"),
                   command=self._on_go_back, relief="flat").pack(side="left", padx=40)
         self.cancel_btn = tk.Button(btn_frame, text="Confirm Cancellation", bg="#ef4444", fg="white", font=(
-            "Segoe UI", 12, "bold"), state="disabled", command=self._confirm_cancellation, relief="flat", activebackground="#dc2626")
+            "Segoe UI", 12, "bold"), state="disabled", command=self._confirm_cancellation,
+            relief="flat", activebackground="#dc2626")
         self.cancel_btn.pack(side="right", padx=40)
 
     def _on_go_back(self) -> None:

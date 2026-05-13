@@ -89,7 +89,12 @@ def award_points(customer_name: str, customer_email: str, booking_id: str, total
         account_id = cur.lastrowid
 
     conn.execute(
-        "INSERT INTO loyalty_transactions (account_id, booking_id, points_earned, points_redeemed, created_at) VALUES (?, ?, ?, 0, ?)",
+        """
+        INSERT INTO loyalty_transactions (
+            account_id, booking_id, points_earned, points_redeemed, created_at
+        )
+        VALUES (?, ?, ?, 0, ?)
+        """,
         (account_id, booking_id, points, now)
     )
     conn.commit()
@@ -126,7 +131,12 @@ def deduct_points(customer_email: str, booking_id: str, total_cost: float):
         (new_total, new_tier, account_id)
     )
     conn.execute(
-        "INSERT INTO loyalty_transactions (account_id, booking_id, points_earned, points_redeemed, created_at) VALUES (?, ?, ?, ?, ?)",
+        """
+        INSERT INTO loyalty_transactions (
+            account_id, booking_id, points_earned, points_redeemed, created_at
+        )
+        VALUES (?, ?, ?, ?, ?)
+        """,
         (account_id, booking_id, -points_to_deduct, 0, now)
     )
     conn.commit()
